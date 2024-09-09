@@ -63,6 +63,14 @@ rem ----- FUNCTIONS -----
     set "filename=.log"
     set "logfile=%scriptDir%%subfolder%\%currDay%%filename%"
 
+    if not exist "%scriptDir%%subfolder%" (
+        mkdir "%scriptDir%%subfolder%"
+        if %errorlevel% neq 0 (
+            echo Failed to create directory: "%scriptDir%%subfolder%"
+            exit /b 1
+        )
+    )
+
     echo %~1 >> "%logfile%"
     ENDLOCAL
     goto :eof
