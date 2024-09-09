@@ -5,15 +5,22 @@ chcp 65001 >nul
 color 02
 set "inet=2"
 set "server=google.com"
+set "subfolder=logs"
 set min_ping=
 set max_ping=
+call :GetDateTime
+set "startedTime=!currentTime!"
+call :LogToFile "--------------------------------------"
+call :LogToFile "-----===  Started monitoring  ===-----"
+call :LogToFile "-----=== !currentDate!  !currentTime! ===-----"
+
 :main
     call :CheckConnection
     if %pingResult% neq 1 (
         color 02
         set "status= ✓  Connected"
         call :Pinging
-        if %inet% neq 1 (
+        if %inet% equ 0 (
             set "inet=1"
             call :GetDateTime
             set "startedTime=!currentTime!"
@@ -52,11 +59,11 @@ rem ----- FUNCTIONS -----
 :LogToFile
     SETLOCAL enabledelayedexpansion
     for /F "tokens=1-3 delims=-" %%a in ("%date%") do set "currDay=%%a-%%b-%%c"
-    set "scriptDir=%~dp0"
+    set "scriptDir=%~dp0..\"
     set "filename=.log"
-    set "logfile=%scriptDir%%currDay%%filename%"
+    set "logfile=%scriptDir%%subfolder%\%currDay%%filename%"
 
-    echo %~1 >> %logfile%
+    echo %~1 >> "%logfile%"
     ENDLOCAL
     goto :eof
 
